@@ -1,0 +1,32 @@
+{% extends "disbursement/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Импорт/Экспорт устройств</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">Экспорт</div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="export_excel" class="btn btn-primary">Экспорт в Excel</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Импорт из Excel</div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="excel_file" class="form-label">Выберите Excel-файл</label>
+                    <input type="file" name="excel_file" id="excel_file" class="form-control" accept=".xlsx" required>
+                </div>
+                <button type="submit" name="import_excel" class="btn btn-primary">Импортировать</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

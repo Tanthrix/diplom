@@ -1,0 +1,76 @@
+{% extends "disbursement/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Устройства</h2>
+    <p>Владелец: {{ request.user.full_name }}</p>
+    <a href="{% url 'device_create' %}" class="btn btn-primary mb-4">Добавить устройство</a>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Название</th>
+                    <th>Серийный номер</th>
+                    <th>Статус</th>
+                    <th>Аудитория</th>
+                    <th>Фото</th>
+                    <th>Добавлено</th>
+                    <th>Характеристики</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                    <tr>
+                        <td>{{ device.name }}</td>
+                        <td>{{ device.serial_number|default:"Не указан" }}</td>
+                        <td>{{ device.get_status_display }}</td>
+                        <td>{{ device.room|default:"Не указана" }}</td>
+                        <td>
+                            {% if device.photo %}
+                                <img src="{{ device.photo.url }}" alt="{{ device.name }}" style="max-width: 100px; max-height: 100px;">
+                            {% else %}
+                                Нет фото
+                            {% endif %}
+                        </td>
+                        <td>{{ device.created_at|date:"d.m.Y H:i" }}</td>
+                        <td id="specs">
+                            <a href="{% url 'add_specification' device.id %}" class="btn btn-sm btn-success mb-2" title="Добавить характеристику">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                            <ul>
+                                {% for spec in device.specifications.all %}
+                                    <li>
+                                        {{ spec.name }}: {{ spec.value }}
+                                        <a href="{% url 'edit_specification' spec.id %}" class="btn btn-sm btn-info" title="Редактировать">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'delete_specification' spec.id %}" class="btn btn-sm btn-danger" title="Удалить">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </li>
+                                {% empty %}
+                                    <li>Нет характеристик.</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <a href="{% url 'edit_device' device.id %}" class="btn btn-sm btn-info" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'delete_device' device.id %}" class="btn btn-sm btn-danger" title="Удалить">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">Нет устройств.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

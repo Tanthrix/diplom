@@ -1,0 +1,15 @@
+{% extends "disbursement/base.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Редактировать характеристику: {{ spec }}</h2>
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'device_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}
